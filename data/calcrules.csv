@@ -1,0 +1,26 @@
+Profile description;calcrule_id;d1;d2;d3;a1;l1;s1;s2;s3;ded_type;lim_type
+deductible and limit;1;x;;;;x;;;;fixed amount;fixed amount
+deductible with attachment, limit and share;2;x;;;x;x;x;;;fixed amount;fixed amount
+franchise deductible and limit;3;x;;;;x;;;;franchise;fixed amount
+deductible % TIV and limit;4;x;;;;x;;;;% of TIV;fixed amount
+deductible and limit % loss;5;x;;;;x;;;;% of loss;% of loss
+deductible % TIV;6;x;;;;;;;;% of TIV;
+limit and maximum deductible;7;;;x;;x;;;;;fixed amount
+limit and minimum deductible;8;;x;;;x;;;;;fixed amount
+limit with deductible % limit;9;x;;;;x;;;;% of limit;fixed amount
+maximum deductible;10;;;x;;;;;;;
+minimum deductible;11;;x;;;;;;;;
+deductible;12;x;;;;;;;;fixed amount;
+minimum and maximum deductible;13;;x;x;;;;;;;
+limit only;14;;;;;x;;;;;fixed amount
+limit % loss;15;;;;;x;;;;;% of loss
+deductible % loss;16;x;;;;;;;;% of loss;
+deductible % loss with attachment, limit and share;17;x;;;x;x;x;;;% of loss;fixed amount
+deductible % tiv with attachment, limit and share;18;x;;;x;x;x;;;% of TIV;fixed amount
+% loss deductible with min and max deductible;19;x;x;x;;;;;;% of loss;
+reverse franchise deductible;20;x;;;;;;;;reverse franchise;
+% tiv deductible with min and max deductible;21;x;x;x;;;;;;% of TIV;
+reinsurance % ceded, limit and % placed;22;;;;;x;x;x;x;;fixed amount
+reinsurance limit and % placed;23;;;;;x;;x;x;;fixed amount
+reinsurance excess terms;24;;;;x;x;x;x;x;;fixed amount
+reinsurance proportional terms;25;;;;;;x;x;x;;

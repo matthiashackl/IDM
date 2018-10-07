@@ -1,0 +1,73 @@
+#account:
+{
+	"_id": "Acc_37",
+ 	"address": {
+ 		"city": "New York", 
+ 		"country": "US", 
+ 		"street": "37 N Ave"
+ 	},
+ 	"email": "acc_37@idm.com",
+ 	"insured_objects": ["InsObj_37_1", "InsObj_37_2"],
+ 	"name": "account_37",
+ 	"policies": "Acc37_Pol1"
+ }
+
+#policy:
+{
+	"_id": "policy_1",
+	"inception_date": "DateTime(2018,01,01)",
+	"expiration_date": "DateTime(2018,12,31)",
+	"covered_perils": ["EQ","FL","WS", "FI"],
+	"layers": [{
+		"layer_id": "layer1",
+		"feeds_into": ["layer2", "layer3"],
+		"covers": ["layer_22", "InsObj_1", "InsObj_2"],
+		"terms": {
+			"limit": {
+				"type": "fix amount",
+				"value": 10000
+			},
+			"deductible": {
+				"type": "% of loss",
+				"value": 0.3
+			},
+			"share": 0.6
+		}
+	}]
+}
+
+#insured object:
+{
+	"_id": "InsObj_1",
+	"account": "AccID",
+	"tiv": 0.0,
+	"item_id": 88.0,
+    "areaperil_id": 2.0,
+    "vulnerability_id": 100009.0,
+    "group_id": 42.0,
+    "location" : {
+    	"address": {
+    		"country": "US",
+    		"city": "New York",
+    		"street": "23 N Ave",
+    		"zip": "11111"
+    	},
+    	"geometry": {
+ 			"type": "Point",
+            "coordinates": [12, 50]
+        }
+    },
+    "occupancy": {
+    	"classification": "ATC",
+    	"class": 1,
+    	"desc": "Single Family housing"
+    },
+    "construction": {
+"classification": "ATC",
+"class": 5,
+"desc": "Masonry",
+"year_built": 1978,
+"height": 2,
+"basement": "True"
+    }
+}
