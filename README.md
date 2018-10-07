@@ -13,7 +13,7 @@ The definition and implementation of the IDM is based on the following criteria:
 
 ### 1.1 Preciseness
 
-The IDM should designed in a way that it does not limit the representation of reality. For example, insurance terms and conditions shall be representated in exactly the way they are fomulated in the legally binding policy. At the same time, redundancy shall be avoided. 
+The IDM is designed in a way that it does not limit the representation of reality. For example, insurance terms and conditions shall be representated in exactly the way they are fomulated in the legally binding policy. At the same time, redundancy shall be avoided. 
 
 ### 1.2 Flexibility
 
