@@ -179,7 +179,7 @@ def load_ktest_example(acc_id):
     try:
         fm_programme, fm_profile, fm_policytc, fm_xref, items, coverages = load_files(fp)
     except:
-        print("can't find: ", fp)
+        return None, None, None
     fm_profile["terms"] = fm_profile.apply(terms_dict, axis=1)
     fm_policytc = fm_policytc.merge(fm_profile[["profile_id", "terms"]], left_on="policytc_id", right_on="profile_id").drop("profile_id", axis=1)
     
