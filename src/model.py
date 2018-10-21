@@ -10,6 +10,9 @@ with open('../user.config') as f:
 connect('IDM', user["mongo_atlas"])
 
 
+DED_CHOICES = ("fixed amount", "franchise", "% of TIV", "% of limit", "minimum", "maximum")
+LIM_CHOICES = ("fixed amount", "% of loss")
+
 class Account(Document):
     account_id = StringField(required=True)
     name = StringField()
@@ -19,19 +22,36 @@ class Account(Document):
     #insured_objects = ListField(InsuredObject)
 
 
+class Deductible(EmbeddedDocument):
+    type = StringField(choices=DED_CHOICES, required=True)
+    value = FloatField(required= True)
+
+
+class Limit(EmbeddedDocument):
+    type = StringField(choices=LIM_CHOICES, required=True)
+    value = FloatField(required= True)
+
+
 class Term(EmbeddedDocument):
+    deductible = EmbeddedDocumentListField(Deductible)
+    limit = EmbeddedDocumentListField(Limit)
+    share = FloatField
     
 
 class Layer(Document):
-    layer_id = ObjectIdField(required=True)
-    covers = ListField(ReferenceField(Layer))
-    feeds_into = ListField(ReferenceField(Layer))
-    terms = 
+    #layer_id = ObjectIdField(required=True)
+    policy = ReferenceField('Policy')
+    covers = ListField(ReferenceField('self'))
+    feeds_into = ListField(ReferenceField('self'))
+    terms = EmbeddedDocumentField(Term)
     
 
 class Policy(Document):
-    policy_id = ObjectIdField(required=True)
+    #policy_id = ObjectIdField(required=True)
     account = ReferenceField(Account)
+    inception_date = DateTimeField()
+    expiration_date = DateTimeField()
+    layers = ListField(ReferenceField('Layer'))
     
 
 class Address(EmbeddedDocument):
@@ -39,12 +59,7 @@ class Address(EmbeddedDocument):
     city = StringField()
     street = StringField()
     postal_code = StringField()    
-    
-
-class Geometry(EmbeddedDocument):
-    geomtype = StringField()
-    coordinates = ListField()
-    
+        
 
 class Occupancy(EmbeddedDocument):
     classification = StringField(default="ATC")
@@ -63,7 +78,7 @@ class Construction(EmbeddedDocument):
 class InsuredObject(Document):
     account = ReferenceField(Account)
     address = EmbeddedDocumentField(Address)
-    geometry = EmbeddedDocumentField(Geometry)
+    location = PointField()
     iotype = StringField()
     
     meta = {'allow_inheritance': True}
