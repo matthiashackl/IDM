@@ -1,4 +1,5 @@
 import json
+from datetime import datetime as dt
 from mongoengine import *
 
 with open('user.config') as f:
@@ -33,14 +34,21 @@ class Account(Document):
 class Deductible(EmbeddedDocument):
     type = StringField(choices=DED_CHOICES, required=True)
     value = FloatField(required= True)
+    currency = StringField(default="EUR")
 
     def clean(self):
-        if self.type in ["% of TIV", "% of loss"] and ((self.value < 0) or (self.value > 1)):
-            msg = 'Value must be between 0 and 1'
-            raise ValidationError(msg)
-        elif self.type in ["fixed amout", "franchise", "minimum", "maximum"] and (self.value < 0):
-            msg = 'Value must not be negative'
-            raise ValidationError(msg)
+        if self.type in ["% of TIV", "% of loss"]:
+            self.currency = None
+            if ((self.value < 0) or (self.value > 1)):
+                msg = 'Value must be between 0 and 1'
+                raise ValidationError(msg)
+        elif self.type in ["fixed amout", "franchise", "minimum", "maximum"]:
+            if self.currency == None:
+                msg = 'No currency specified'
+                raise ValidationError(msg)
+            if (self.value < 0):
+                msg = 'Value must not be negative'
+                raise ValidationError(msg)
             
 
 class Limit(EmbeddedDocument):
@@ -61,7 +69,7 @@ class Term(EmbeddedDocument):
     deductible = EmbeddedDocumentListField(Deductible)
     limit = EmbeddedDocumentListField(Limit)
     share = FloatField(default=1.0)
-
+    covered_perils = ListField(StringField(), default= COVERED_PERILS)
     def clean(self):
         if (self.share < 0) or (self.share > 1):
             msg = 'Share must be between 0 and 1'
@@ -76,7 +84,6 @@ class Layer(Document):
     feeds_into_layer = ListField(ReferenceField('self'))
     feeds_into_policyloss = BooleanField(default=True)
     terms = EmbeddedDocumentField(Term)
-    covered_perils = ListField(StringField(length=255), default= lambda: COVERED_PERILS)
     
 
 class Policy(Document):
@@ -102,6 +109,22 @@ class Construction(EmbeddedDocument):
     height = IntField()
     
 
+class TIV(EmbeddedDocument):
+    value = FloatField(default=0.0)
+    currency = StringField(default="EUR")
+    as_of = DateTimeField(default=dt.now())
+
+    def clean(self):
+        if self.value < 0:
+            msg= 'TIV must not be negative'
+            raise ValidationError(msg)
+
+
+class Coverage(EmbeddedDocument):
+    tiv = EmbeddedDocumentField(TIV)
+    terms = EmbeddedDocumentField(Term)
+
+
 class InsuredObject(Document):
     account = ReferenceField(Account)
     meta = {'allow_inheritance': True}
@@ -112,17 +135,7 @@ class Building(InsuredObject):
     construction = EmbeddedDocumentField(Construction)
     location = PointField()
     address = EmbeddedDocumentField(Address)
-    building_tiv = FloatField(default=0.0)
-    content_tiv = FloatField(default=0.0)
-    time_element_tiv = FloatField(default=0.0)
-
-    def clean(self):
-        if (self.building_tiv < 0) and (self.content_tiv < 0) and (self.time_element_tiv < 0):
-            msg = 'TIV must not be negative'
-            raise ValidationError(msg)
-
-#class Vehicle(InsuredObject):
-#    type = StringField(length=255)
-
-
-#class Person(InsuredObject):
+    building = EmbeddedDocumentField(Coverage)
+    content = EmbeddedDocumentField(Coverage)
+    time_element = EmbeddedDocumentField(Coverage)
+    other = EmbeddedDocumentField(Coverage)
